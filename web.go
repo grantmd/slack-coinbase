@@ -8,6 +8,8 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/grantmd/go-coinbase"
 	"log"
 	"net/http"
 	"strconv"
@@ -26,9 +28,18 @@ func init() {
 			log.Printf("Handling incoming request: %s", incomingText)
 
 			if strings.HasPrefix(incomingText, botUsername) {
+				c := &coinbase.Client{
+					APIKey: coinbaseAPIKey,
+				}
+
+				rate, err := c.PricesSpotRate()
+				if err != nil {
+					log.Fatal(err)
+				}
+
 				var response WebhookResponse
 				response.Username = botUsername
-				response.Text = ""
+				response.Text = fmt.Sprintf("Price: %f", rate)
 				log.Printf("Sending response: %s", response.Text)
 
 				b, err := json.Marshal(response)
