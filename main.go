@@ -25,7 +25,7 @@ func main() {
 
 	flag.Parse()
 
-	if httpPort == 0 || apiKey == "" || webhookToken == "" {
+	if httpPort == 0 {
 		flag.Usage()
 		os.Exit(2)
 	}

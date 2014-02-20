@@ -8,26 +8,37 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type WebhookResponse struct {
 	Username string `json:"username"`
 	Text     string `json:"text"`
-	Channel  string `json:"channel"`
 }
 
 func init() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		incomingText := r.PostFormValue("text")
-		log.Printf("Handling incoming request: %s", incomingText)
+		if incomingText != "" && r.PostFormValue("user_id") != "" {
+			log.Printf("Handling incoming request: %s", incomingText)
+
+			if strings.HasPrefix(incomingText, botUsername) {
+				var response WebhookResponse
+				response.Username = botUsername
+				response.Text = ""
+				log.Printf("Sending response: %s", response.Text)
+
+				b, err := json.Marshal(response)
+				if err != nil {
+					log.Fatal(err)
+				}
+
+				w.Write(b)
+			}
+		}
 
 	})
 }
