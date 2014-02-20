@@ -27,17 +27,24 @@ func init() {
 		if incomingText != "" && r.PostFormValue("user_id") != "" {
 			log.Printf("Handling incoming request: %s", incomingText)
 
-			if strings.HasPrefix(incomingText, botUsername) {
+			parts := strings.Split(incomingText, " ")
+			if parts[0] == botUsername+":" {
 				c := &coinbase.Client{}
-
-				rate, err := c.PricesSpotRate()
-				if err != nil {
-					log.Fatal(err)
-				}
 
 				var response WebhookResponse
 				response.Username = botUsername
-				response.Text = fmt.Sprintf("Price: %f", rate.Amount)
+				if parts[1] == "price" {
+					rate, err := c.PricesSpotRate()
+					if err != nil {
+						log.Fatal(err)
+					}
+					response.Text = fmt.Sprintf("Price: %f %s", rate.Amount, rate.Currency)
+				} else if parts[1] == "help" {
+					response.Text = "Commands: price"
+				} else {
+					response.Text = "Sorry, bro, I don't know what you mean. Try '" + botUsername + " help', maybe?"
+				}
+
 				log.Printf("Sending response: %s", response.Text)
 
 				b, err := json.Marshal(response)
