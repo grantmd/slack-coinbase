@@ -19,6 +19,7 @@ import (
 type WebhookResponse struct {
 	Username string `json:"username"`
 	Text     string `json:"text"`
+	IconUrl  string `json:"icon_url"`
 }
 
 func init() {
@@ -33,6 +34,8 @@ func init() {
 
 				var response WebhookResponse
 				response.Username = botUsername
+				response.IconUrl = "https://en.bitcoin.it/w/images/en/2/29/BC_Logo_.png"
+
 				if parts[1] == "price" {
 					rate, err := c.PricesSpotRate()
 					if err != nil {
