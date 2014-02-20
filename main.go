@@ -9,9 +9,8 @@ import (
 )
 
 var (
-	httpPort       int
-	botUsername    string
-	coinbaseAPIKey string
+	httpPort    int
+	botUsername string
 )
 
 func main() {
@@ -21,14 +20,12 @@ func main() {
 		flag.PrintDefaults()
 	}
 
-	flag.IntVar(&httpPort, "port", 8002, "The HTTP port on which to listen")
+	flag.IntVar(&httpPort, "port", 8001, "The HTTP port on which to listen")
 	flag.StringVar(&botUsername, "botUsername", "coinbase", "The name of the bot when it speaks")
-
-	flag.StringVar(&coinbaseAPIKey, "coinbaseAPIKey", "", "Your Coinbase API key")
 
 	flag.Parse()
 
-	if httpPort == 0 || coinbaseAPIKey == "" {
+	if httpPort == 0 {
 		flag.Usage()
 		os.Exit(2)
 	}

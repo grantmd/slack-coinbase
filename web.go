@@ -28,9 +28,7 @@ func init() {
 			log.Printf("Handling incoming request: %s", incomingText)
 
 			if strings.HasPrefix(incomingText, botUsername) {
-				c := &coinbase.Client{
-					APIKey: coinbaseAPIKey,
-				}
+				c := &coinbase.Client{}
 
 				rate, err := c.PricesSpotRate()
 				if err != nil {
@@ -39,7 +37,7 @@ func init() {
 
 				var response WebhookResponse
 				response.Username = botUsername
-				response.Text = fmt.Sprintf("Price: %f", rate)
+				response.Text = fmt.Sprintf("Price: %f", rate.Amount)
 				log.Printf("Sending response: %s", response.Text)
 
 				b, err := json.Marshal(response)
